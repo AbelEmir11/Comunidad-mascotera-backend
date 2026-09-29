@@ -5,7 +5,7 @@ API RESTful y lógica de negocio para la plataforma de adopción responsable, se
 > 🎓 **Proyecto Universitario / Académico (Programación 3 / Backend):**  
 > Desarrollado bajo una arquitectura desacoplada (*Decoupled Backend Architecture*), aplicando principios de **Diseño Orientado a Objetos (POO)**, patrones de diseño por capas (*Layered Architecture*) y buenas prácticas de la industria.  
 > La interfaz de usuario cliente se encuentra en el repositorio hermano:  
-> 👉 **[comunidad-mascotera-frontend](https://github.com/TU_USUARIO/comunidad-mascotera-frontend)** (Next.js 14+ / React 19).
+> 👉 **[comunidad-mascotera-frontend](https://github.com/AbelEmir11/comunidad-mascotera-frontend)** (Next.js 14+ / React 19).
 
 ---
 
