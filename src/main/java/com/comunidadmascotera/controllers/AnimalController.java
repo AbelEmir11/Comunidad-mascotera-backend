@@ -1,5 +1,6 @@
 package com.comunidadmascotera.controllers;
 
+import com.comunidadmascotera.dtos.AnimalResponseDto;
 import com.comunidadmascotera.entities.Animal;
 import com.comunidadmascotera.services.AnimalService;
 import org.springframework.http.ResponseEntity;
@@ -18,33 +19,39 @@ public class AnimalController {
     }
 
     @GetMapping
-    public List<Animal> listar(
+    public List<AnimalResponseDto> listar(
             @RequestParam(required = false) String especie,
             @RequestParam(required = false) String refugioId,
             @RequestParam(required = false) Boolean urgente) {
 
+        List<Animal> animales;
         if (Boolean.TRUE.equals(urgente)) {
-            return animalService.listarUrgentes();
+            animales = animalService.listarUrgentes();
+        } else if (refugioId != null && !refugioId.isBlank()) {
+            animales = animalService.buscarPorRefugio(refugioId);
+        } else if (especie != null && !especie.isBlank()) {
+            animales = animalService.buscarPorEspecie(especie);
+        } else {
+            animales = animalService.listarTodos();
         }
-        if (refugioId != null && !refugioId.isBlank()) {
-            return animalService.buscarPorRefugio(refugioId);
-        }
-        if (especie != null && !especie.isBlank()) {
-            return animalService.buscarPorEspecie(especie);
-        }
-        return animalService.listarTodos();
+
+        return animales.stream()
+                .map(AnimalResponseDto::fromEntity)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Animal> obtenerPorId(@PathVariable String id) {
+    public ResponseEntity<AnimalResponseDto> obtenerPorId(@PathVariable String id) {
         return animalService.buscarPorId(id)
+                .map(AnimalResponseDto::fromEntity)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Animal> crear(@RequestBody Animal animal) {
-        return ResponseEntity.ok(animalService.guardar(animal));
+    public ResponseEntity<AnimalResponseDto> crear(@RequestBody Animal animal) {
+        Animal guardado = animalService.guardar(animal);
+        return ResponseEntity.ok(AnimalResponseDto.fromEntity(guardado));
     }
 
     /**
@@ -74,7 +81,7 @@ public class AnimalController {
             int score = animalService.calcularAfinidad(a, housing, hoursAlone, hasKids, hasCats, hasDogs, activityLevel);
 
             Map<String, Object> item = new HashMap<>();
-            item.put("animal", a);
+            item.put("animal", AnimalResponseDto.fromEntity(a));
             item.put("matchScore", score);
             resultados.add(item);
         }
