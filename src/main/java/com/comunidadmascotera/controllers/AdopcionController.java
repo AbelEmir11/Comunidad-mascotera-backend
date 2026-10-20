@@ -3,6 +3,7 @@ package com.comunidadmascotera.controllers;
 import com.comunidadmascotera.entities.SolicitudAdopcion;
 import com.comunidadmascotera.services.AdopcionService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,7 @@ public class AdopcionController {
             @PathVariable String animalId,
             @Valid @RequestBody SolicitudAdopcion solicitud) {
         SolicitudAdopcion guardada = adopcionService.registrarSolicitud(animalId, solicitud);
-        return ResponseEntity.ok(guardada);
+        return ResponseEntity.status(HttpStatus.CREATED).body(guardada);
     }
 
     @PatchMapping("/{id}/estado")
